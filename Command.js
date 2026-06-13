@@ -1,38 +1,38 @@
-class PedidoSimples {
-    constructor() { this.status = "Ativo"; }
+class DocumentoAssinado {
+    constructor() { this.estado = "Válido"; }
 }
 
 // O Comando Específico
-class CancelarPedidoComando {
-    constructor(pedido) {
-        this.pedido = pedido;
+class RevogarDocumentoComando {
+    constructor(documento) {
+        this.documento = documento;
     }
 
     executar() {
-        this.pedido.status = "Cancelado";
-        console.log("Comando: Pedido foi Cancelado.");
+        this.documento.estado = "Revogado";
+        console.log("Comando: Documento foi Revogado.");
     }
 
     desfazer() {
-        this.pedido.status = "Ativo";
-        console.log("Comando Desfeito (Undo): Pedido voltou a ser Ativo.");
+        this.documento.estado = "Válido";
+        console.log("Comando Desfeito (Undo): Documento voltou a ser Válido.");
     }
 }
 
 // O Gerenciador que mantém o histórico
-class GerenciadorComandos {
+class HistoricoAcoes {
     constructor() {
-        this.historico = [];
+        this.pilhaExecucao = [];
     }
 
     executar(comando) {
         comando.executar();
-        this.historico.push(comando); // Guarda na pilha
+        this.pilhaExecucao.push(comando); // Guarda na pilha
     }
 
     desfazer() {
-        if (this.historico.length > 0) {
-            const ultimoComando = this.historico.pop(); // Tira o último da pilha
+        if (this.pilhaExecucao.length > 0) {
+            const ultimoComando = this.pilhaExecucao.pop(); // Tira o último da pilha
             ultimoComando.desfazer();
         } else {
             console.log("Não há ações para desfazer.");
@@ -41,12 +41,12 @@ class GerenciadorComandos {
 }
 
 // Testando
-const pedidoSimples = new PedidoSimples();
-const gerenciador = new GerenciadorComandos();
-const comandoCancelar = new CancelarPedidoComando(pedidoSimples);
+const meuDocumento = new DocumentoAssinado();
+const gerenciadorAcoes = new HistoricoAcoes();
+const comandoRevogar = new RevogarDocumentoComando(meuDocumento);
 
-gerenciador.executar(comandoCancelar);
-console.log(`Status atual: ${pedidoSimples.status}`); // Cancelado
+gerenciadorAcoes.executar(comandoRevogar);
+console.log(`Estado atual: ${meuDocumento.estado}`); // Revogado
 
-gerenciador.desfazer();
-console.log(`Status atual: ${pedidoSimples.status}`); // Ativo
+gerenciadorAcoes.desfazer();
+console.log(`Estado atual: ${meuDocumento.estado}`); // Válido

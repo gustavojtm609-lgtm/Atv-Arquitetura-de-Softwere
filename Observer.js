@@ -1,47 +1,47 @@
 // Observadores (Quem quer ser notificado)
-class EmailObserver { 
-    atualizar(pedido) { 
-        console.log(`Enviando email: O pedido #${pedido.id} foi confirmado.`); 
+class WhatsAppObserver { 
+    atualizar(requisicao) { 
+        console.log(`Enviando WhatsApp: A requisição #${requisicao.codigo} foi aprovada.`); 
     } 
 }
 
-class EstoqueObserver { 
-    atualizar(pedido) { 
-        console.log(`Estoque: Dando baixa nos itens do pedido #${pedido.id}.`); 
+class LogisticaObserver { 
+    atualizar(requisicao) { 
+        console.log(`Logística: Preparando envio da requisição #${requisicao.codigo}.`); 
     } 
 }
 
-class LogObserver { 
-    atualizar(pedido) { 
-        console.log(`Log: Auditoria salva para pedido #${pedido.id}.`); 
+class AuditoriaObserver { 
+    atualizar(requisicao) { 
+        console.log(`Auditoria: Registro salvo para a requisição #${requisicao.codigo}.`); 
     } 
 }
 
 // O Sujeito (Quem emite o evento)
-class Pedido {
-    constructor(id) {
-        this.id = id;
-        this.observers = []; // Lista de inscritos
+class Requisicao {
+    constructor(codigo) {
+        this.codigo = codigo;
+        this.inscritos = []; // Lista de inscritos
     }
 
-    registrar(observer) {
-        this.observers.push(observer);
+    inscrever(inscrito) {
+        this.inscritos.push(inscrito);
     }
 
-    confirmar() {
-        console.log(`\nConfirmando pedido #${this.id}...`);
-        this.notificar(); // Dispara todos os observers
+    aprovar() {
+        console.log(`\nAprovando requisição #${this.codigo}...`);
+        this.notificar(); // Dispara todos os inscritos
     }
 
     notificar() {
-        this.observers.forEach(obs => obs.atualizar(this));
+        this.inscritos.forEach(inscrito => inscrito.atualizar(this));
     }
 }
 
 // Testando
-const pedido = new Pedido(998);
-pedido.registrar(new EmailObserver());
-pedido.registrar(new EstoqueObserver());
-pedido.registrar(new LogObserver());
+const minhaRequisicao = new Requisicao(405);
+minhaRequisicao.inscrever(new WhatsAppObserver());
+minhaRequisicao.inscrever(new LogisticaObserver());
+minhaRequisicao.inscrever(new AuditoriaObserver());
 
-pedido.confirmar();
+minhaRequisicao.aprovar();

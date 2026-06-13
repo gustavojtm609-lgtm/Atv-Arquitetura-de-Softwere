@@ -1,47 +1,47 @@
 // Stubs (Simulações simples dos subsistemas)
-class EstoqueService {
-    reservar(itens) {
-        console.log("- Estoque reservado.");
+class ArmazemService {
+    alocar(itens) {
+        console.log("- Itens alocados no armazém.");
     }
 }
 
-class PagamentoService {
-    cobrar(valor) { 
-        console.log(`- Cobrado R$ ${valor.toFixed(2)}`);
+class CobrancaService {
+    processarCobranca(valor) { 
+        console.log(`- Processada cobrança de R$ ${valor.toFixed(2)}`);
     }
 }
 
-class CarrinhoService { 
-    limpar() { 
-        console.log("- Carrinho limpo."); 
+class CacheService { 
+    esvaziar() { 
+        console.log("- Cache temporário esvaziado."); 
     } 
 }
 
-class EmailService { 
-    confirmar(pedido) { 
-        console.log("- E-mail de confirmação enviado."); 
+class SmsService { 
+    avisar(pedido) { 
+        console.log("- SMS de aviso enviado ao cliente."); 
     } 
 }
 
 // A Fachada que orquestra tudo
-class CheckoutFacade {
+class FinalizacaoFacade {
     constructor() {
-        this.estoque = new EstoqueService();
-        this.pagamento = new PagamentoService();
-        this.carrinho = new CarrinhoService();
-        this.email = new EmailService();
+        this.armazem = new ArmazemService();
+        this.cobranca = new CobrancaService();
+        this.cache = new CacheService();
+        this.sms = new SmsService();
     }
 
     finalizar(pedido) {
-        console.log("Iniciando finalização de pedido...");
-        this.estoque.reservar(pedido.itens);
-        this.pagamento.cobrar(pedido.total);
-        this.carrinho.limpar();
-        this.email.confirmar(pedido);
-        console.log("Pedido finalizado com sucesso!\n");
+        console.log("Iniciando processamento da compra...");
+        this.armazem.alocar(pedido.itens);
+        this.cobranca.processarCobranca(pedido.total);
+        this.cache.esvaziar();
+        this.sms.avisar(pedido);
+        console.log("Compra processada com sucesso!\n");
     }
 }
 
 // Testando
-const facade = new CheckoutFacade();
-facade.finalizar({ itens: ["Teclado"], total: 350.00 });
+const fachada = new FinalizacaoFacade();
+fachada.finalizar({ itens: ["Monitor"], total: 850.00 });

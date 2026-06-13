@@ -1,42 +1,42 @@
 // Estratégias disponíveis
-class FreteCorreios { 
-    calcular(peso) { 
-        return peso * 10.5; 
+class TransporteAereo { 
+    calcularCusto(distancia) { 
+        return distancia * 12.5; 
     } 
 }
 
-class FreteJadlog { 
-    calcular(peso) { 
-        return peso * 8.0; 
+class TransporteTerrestre { 
+    calcularCusto(distancia) { 
+        return distancia * 6.0; 
     } 
 }
 
-class FreteRetirada { 
-    calcular(peso) { 
+class TransporteMaritimo { 
+    calcularCusto(distancia) { 
         return 0.0; 
     } 
 }
 
-// O Carrinho que utiliza a estratégia dinamicamente
-class Carrinho {
+// O Calculador que utiliza a estratégia dinamicamente
+class CalculadoraEnvio {
     constructor() {
-        this.estrategiaFrete = null;
+        this.estrategiaEnvio = null;
     }
 
-    setFrete(estrategia) {
-        this.estrategiaFrete = estrategia;
+    definirEstrategia(estrategia) {
+        this.estrategiaEnvio = estrategia;
     }
 
-    calcularFrete(peso) {
-        if (!this.estrategiaFrete) throw new Error("Estratégia de frete não definida!");
-        return this.estrategiaFrete.calcular(peso);
+    obterValor(distancia) {
+        if (!this.estrategiaEnvio) throw new Error("Estratégia de envio não definida!");
+        return this.estrategiaEnvio.calcularCusto(distancia);
     }
 }
 
 // Testando
-const carrinho = new Carrinho();
-carrinho.setFrete(new FreteCorreios());
-console.log(`Frete Correios: R$ ${carrinho.calcularFrete(2.5).toFixed(2)}`);
+const calculadora = new CalculadoraEnvio();
+calculadora.definirEstrategia(new TransporteAereo());
+console.log(`Envio Aéreo: R$ ${calculadora.obterValor(15.0).toFixed(2)}`);
 
-carrinho.setFrete(new FreteRetirada());
-console.log(`Frete Retirada: R$ ${carrinho.calcularFrete(2.5).toFixed(2)}`);
+calculadora.definirEstrategia(new TransporteMaritimo());
+console.log(`Envio Marítimo: R$ ${calculadora.obterValor(15.0).toFixed(2)}`);

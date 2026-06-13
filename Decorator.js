@@ -1,39 +1,39 @@
-// Simulação de um pagamento existente
-class PagamentoPix {
+// Simulação de uma transação existente
+class TransacaoDebito {
     processar(valor) {
-        console.log(`Processando PIX de R$ ${valor.toFixed(2)}`);
+        console.log(`Processando Débito de R$ ${valor.toFixed(2)}`);
     }
 }
 
 // Decorator para adicionar Logs
-class LogDecorator {
-    constructor(pagamentoEmbutido) {
-        this.pagamentoEmbutido = pagamentoEmbutido;
+class RastreioDecorator {
+    constructor(transacaoEmbutida) {
+        this.transacaoEmbutida = transacaoEmbutida;
     }
 
     processar(valor) {
-        console.log(`[LOG] Iniciando transação no valor de R$ ${valor.toFixed(2)}`);
-        this.pagamentoEmbutido.processar(valor);
+        console.log(`[RASTREIO] Iniciando operação no valor de R$ ${valor.toFixed(2)}`);
+        this.transacaoEmbutida.processar(valor);
     }
 }
 
 // Decorator para aplicar Descontos
-class DescontoDecorator {
-    constructor(pagamentoEmbutido, percentual) {
-        this.pagamentoEmbutido = pagamentoEmbutido;
-        this.percentual = percentual;
+class VoucherDecorator {
+    constructor(transacaoEmbutida, taxaDesconto) {
+        this.transacaoEmbutida = transacaoEmbutida;
+        this.taxaDesconto = taxaDesconto;
     }
 
     processar(valor) {
-        const valorComDesconto = valor - (valor * (this.percentual / 100));
-        console.log(`[DESCONTO] Aplicado ${this.percentual}%.`);
-        this.pagamentoEmbutido.processar(valorComDesconto);
+        const valorAbatido = valor - (valor * (this.taxaDesconto / 100));
+        console.log(`[VOUCHER] Aplicado desconto de ${this.taxaDesconto}%.`);
+        this.transacaoEmbutida.processar(valorAbatido);
     }
 }
 
 // Testando a combinação (aninhamento)
-const pagamento = new LogDecorator(
-    new DescontoDecorator(new PagamentoPix(), 10)
+const transacaoFinal = new RastreioDecorator(
+    new VoucherDecorator(new TransacaoDebito(), 10)
 );
 
-pagamento.processar(200.00);
+transacaoFinal.processar(200.00);
